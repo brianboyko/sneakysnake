@@ -14,32 +14,23 @@ export default class Snake {
     this.direction = direction;
   }
   getNextMove () {
-    if(this.direction === 'u'){
-      return Object.assign(this.path[0], {row: this.path[0].row - 1, direction: this.direction});
-    }
-    if(this.direction === 'd'){
-      return Object.assign(this.path[0], {row: this.path[0].row + 1, direction: this.direction});
-    }
-    if(this.direction === 'l'){
-      return Object.assign(this.path[0], {column: this.path[0].column - 1, direction: this.direction});
-    }
-    if(this.direction === 'r'){
-      return Object.assign(this.path[0], {column: this.path[0].column + 1, direction: this.direction});
-    }
-  }
-  moveSnake () {
-    this.path.unshift(getNextMove());
-    this.path.pop();
+    let r = this.path[0].row;
+    let c = this.path[0].column;
+    r += (this.direction === 'u') ? -1 : 0;
+    r += (this.direction === 'd') ? 1 : 0;
+    c += (this.direction === 'l') ? -1 : 0;
+    c += (this.direction === 'r') ? 1 : 0;
+    return ({
+      direction: this.direction,
+      row: r,
+      column: c
+    })
   }
   growSnake () {
-    this.path.unshift(getNextMove());
+    this.path.unshift(this.getNextMove());
   }
-  isGameOver (field) {
-    // snake runs off field.
-    if (!field.isValidSquare(this.path[0].row, this.path[0].column)){
-      return true;
-    }
-    // snake eats itself.
-    return this.path.reduce((pv, cv) => pv || (this.path[0].row === cv.path.row && this.path[0].column === cv.path.column), false)
+  moveSnake () {
+    this.path.unshift(this.getNextMove());
+    this.path.pop();
   }
 }
